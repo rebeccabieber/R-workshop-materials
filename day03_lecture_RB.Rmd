@@ -149,15 +149,27 @@ A few handy things with numbers:
 
 ```{r}
 # floating point pitfalls
+x = 0.1 + 0.2 
+x
+x == 0.3
 
 # "e" notation for really big numbers
 1e4
 
-# round(), floor(), ceiling()
+# round() - round it to a specified number of decimal points
+x2 = round(x, 1)
+x2
+# floor() - round down
+# ceiling() - round up
 
-# sample(), rnorm(), rbinom()
 
-# the r/p/d families
+# sample() - takes a random sample, doesn't have to be with numbers)
+# rnorm() - numbers pulled from random distribution
+# rbinom() - randomly pulled from a binomial distribution
+
+rbinom(10, size = 10, prob = 0.2) #flip 10 coins, count how many successes i got, and do that ten                                   times (ten runs of ten coin flips)
+
+# the r/p/d/q families
 
 # quantile()
 
