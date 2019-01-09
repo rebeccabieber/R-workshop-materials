@@ -195,15 +195,45 @@ rbinom(10, size = 10, prob = 0.2) #flip 10 coins, count how many successes i got
 ```{r}
 # basic forms
 
+# class() - tells you what class sit is, i.e numeric, character, etc
+
+x = 1:5
+x <= 3
+
+#in practice, we use the & and | to join things.
+
+x = 1:6
+x > 3
+x < 4
+
+(x > 2) & (x < 5) #parentheses not totally necessary here
+
+x > 2
+!x > 2
+
+!(x > 4 | x < 3)
+
 # "shortcut" forms (avoid!)
 
 # examples of comparisons
+1 == 2  #== also works for strings
 
 # which()
+
+x = sample (1:10, 100, replace = TRUE)
+x == 7
+which (x==7)
 
 # logicals for subsetting
 
 # %in%
+all.values = c("a", "b", "c", "d")
+x = sample(all.values, 100, TRUE)
+x
+#we want to know where the a's and b's are
+
+x == c("a", "b") #not the right way! (checks if the first is a, second is b, third is a, etc)
+x %in% c("a", "b") # this is the right way (checks a and b for each one)
 
 ```
 

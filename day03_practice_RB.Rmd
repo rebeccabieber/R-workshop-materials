@@ -6,18 +6,24 @@ output: html_document
 0. Make a "copy" of the `iris` data set in your workspace.
 
 ```{r}
-myris <- iris
+myiris <- iris
 ```
 
-1. Create a new data frame that is the subset of rows where Sepal Length is equal to or greater than 3.3.  
+1. Create a new data frame that is the subset of rows where Sepal Width is equal to or greater than 3.3.  
 
 ```{r}
+myiris_sep = subset(myiris, myiris$Sepal.Width >= 3.3)
+
+#scott's way: myris.sub1 = myris[myris$Petal.Length >= 3.3, ]
+#to combine: myris.sub1 = myris [myris$Petal.Length >= 3.3 & myris$Sepal.Width > 2.5, ]
 
 ```
 
 2. Create a new data frame that is the subset of rows equal to or less than the median value of Petal Width.
 
 ```{r}
+med_width = median(myiris$Petal.Width)
+myiris_wid = subset(myiris, myiris$Petal.Width <= med_width)
 
 ```
 
@@ -25,17 +31,33 @@ myris <- iris
 
 ```{r}
 
+scrambled = myiris[sample(nrow(myiris)), ]
+
+
 ```
 
 4. Using `summary()`, identify a factor in the iris data
 
 ```{r}
-
+summary(myiris)
+#species is a factor
 ```
 
 5. Use subsetting to create a data frame of just the virginica species, then re-run `summary()` to check. Then "clean up" the Species factor so that it only has one level. Show how this works for both the original and the "scrambled" data frame.
 
 ```{r}
+virginica = subset(myiris, myiris$Species == "virginica")
+summary(virginica)
+
+virginica$Species = factor(virginica$Species)
+summary(virginica$Species)
+#------
+
+virginica_scram = subset(scrambled, scrambled$Species == "virginica")
+summary(virginica_scram)
+
+virginica_scram$Species = factor(virginica_scram$Species)
+summary(virginica_scram$Species)
 
 ```
 
@@ -44,18 +66,25 @@ myris <- iris
    b. a character vector
    
 ```{r}
+myiris$species.num = as.numeric(myiris$Species)
+myiris$species.char = as.character(myiris$Species)
 
 ```
 
 7. Use `xtabs()` to see how the values in these new columns line up with the original factor column.
 
 ```{r}
+####NOT SURE ABOUT THIS ONE
+xtabs(myiris$Species ~ myiris$species.num)
+      
 
 ```
 
 8. Create another column that is a copy of the factor column. Now, recode this new column so that the factor levels have new names. 
 
 ```{r}
+myiris$Species2 = myiris$Species
+
 
 ```
 
