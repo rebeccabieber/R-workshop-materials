@@ -12,8 +12,8 @@ output: html_document
 
 ```{r}
 
-getwd() #what is the working directory?
-setwd() #sets the working directory
+#getwd() #what is the working directory?
+#setwd() #sets the working directory
 
 ```
 
@@ -25,7 +25,7 @@ R Markdown: one of the "cutting edge" formats, especially well-integrated into R
 
 The following is a code chunk, and when `knitr()` is run on this document, it will display both the code and the output.
 
-```{r}
+```{r echo == FALSE}
 x <- rnorm(10000)
 hist(x)  # this is a histogram
 
@@ -66,9 +66,9 @@ ttest.results
 # what if ttest.results took minutes/hours to compute?
 save(ttest.results, file = "big important object.RData")
 ttest.results
-rm(ttest.results)
-ttest.results
-load("big important object.RData")
+rm(ttest.results) #removes the object
+ttest.results #see, it's gone!
+load("big important object.RData")    ##loads it, but note that the name of the object is the same as                                        before, and not the name as the object necessarily. After doing                                        the save, recommendin commenting everything out up until the load                                       (i.e. keep the code there, but dont' run it)
 ttest.results
 
 save.image() # saves the *entire* workspace in .RData
@@ -91,8 +91,8 @@ save.image(file = "workspace.RData") # allows you to specify a name for the file
        - whatever you want! (and can program)
 
 ## Weird file types
-Package for reading Excel data:
-  `readxl`
+Package for reading Excel data (contains arguments for which sheet, etc):
+  `readxl`  
 
   - makes it easier to deal with Excel (esp .xslx files) without needing to export to CSV
 
