@@ -7,6 +7,17 @@ output: html_document
 
 # Questions?
 
+## Working directory 
+
+
+```{r}
+
+getwd() #what is the working directory?
+setwd() #sets the working directory
+
+```
+
+
 # R Markdown vs. scripts
 Sweave: the original "reproducible document", mix of LaTeX and R
 
