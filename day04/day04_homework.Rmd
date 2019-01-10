@@ -27,7 +27,8 @@ summary(AgeGroup)
 levels(AgeGroup)
 #this factor has 3 levels - YNH, ONH, OHI. I would like the factors to be ordered as such, but they are not. 
 
-
+cvsiii$AgeGroup = factor(cvsiii$AgeGroup, levels = c("YNH", "ONH", "OHI"))
+summary(cvsiii) 
 
 ```
 
@@ -35,7 +36,10 @@ levels(AgeGroup)
 3. Create a new column that is a numeric "version" of the factor column, using `as.numeric()`. Use `xtabs()` to see how the values of these columns line up.
 
 ```{r}
+cvsiii$Age_numeric = as.numeric(AgeGroup)
+summary(cvsiii)
 
+xtabs(~Age_numeric, AgeGroup, data= cvsiii)
 ```
 
 
@@ -44,6 +48,9 @@ levels(AgeGroup)
 
 ```{r}
 
+cvsiii$Age_copy = cvsiii$AgeGroup
+
+cvsiii$
 
 ```
 

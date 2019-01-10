@@ -200,13 +200,41 @@ mysleepgroup2 = factor(mysleep$group2, levels = c("post", "pre"))
 ```{r}
 # single value
 
+mysleep$experiment = 1
+
+mysleep$group3 = mysleep$group
+
 # using subsetting
+
+#ifelse()
+
+mysleep$sleeplevel1 = ifelse(mysleep$extra >= 1, "high", "low") #if first condition is true, returns high, otherwise next thing
+
+#mysleep$sleeplevel1 = ifelse(mysleep$extra >= 1, "high", ifelse(mysleep$extra <1, "low", NA))
+#can next if elses
+
+
+summary(mysleep)
+
+mysleep$sleeplevel1 = as.factor(ifelse(mysleep$extra >= 1, "high", "low"))
+
+summary(mysleep)
+
+
+mysleep$sleeplevel1 = factor(ifelse(mysleep$extra >= 1, "high", "low"), levels = c("low", "high")) 
+#creates the levels, as a factor, and specifies the order of the levels
+
+summary(mysleep)
+
 
 ```
 
 ## Using xtabs() to check coding/cross-tabs
 
 ```{r}
+#quickly double check a lot of things
+xtabs( ~ group + group2, data = mysleep) #cross-tabulation of data. 
+xtabs( ~ sleeplevel1 + extra, data = mysleep) #cross-tabulation of data. 
 
 ```
 
