@@ -7,7 +7,7 @@ output: html_document
 
 ```{r}
 
-```
+
 
 2. What are the levels of the factor? How many occurrences of each level are there in the data?
    
