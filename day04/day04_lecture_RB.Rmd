@@ -269,7 +269,7 @@ xtabs( ~ sleeplevel1 + extra, data = mysleep) #cross-tabulation of data.
   - helpful to be able to identify, locate them
 
 ```{r}
-
+1/0
 ```
 
 # Data types, classes, & coersion
@@ -284,7 +284,11 @@ xtabs( ~ sleeplevel1 + extra, data = mysleep) #cross-tabulation of data.
 `is.X` family of functions (`is.factor()`, `is.na()`, `is.finite()`, etc.)
 `as.X` family of functions (`as.factor()`, `as.numeric()`, `as.data.frame()`, etc.)
 
+
+
 # PRACTICE: #7
+
+----------just do practice through number 7------------
 
 # Lists
   - similar to vectors
