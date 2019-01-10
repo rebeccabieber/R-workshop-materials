@@ -29,17 +29,71 @@ output: html_document
 Some handy text stuff
 
 ```{r}
+# quotes
+
+x = "a string"
+x
+y = "also a string"
+y
+
+z = "this is a 'string' too"
+z
+w = 'this thing is also a "string"'
+w
+
+#can't do double quotes within double quotes
+
 # cat(), print()
 
-# special characters: \t, \n, "escaping"
+print(x) #returns a representation - reminding you that this is a vector
+cat(x) #just prints the string out to the console - useful if you're doing something like printing a message out to the console and you just want it to look like text. 
 
-# nchar()
+cat(x, file = "cat_example.txt") #here, we printed to a file. it got saved to the working directory. 
 
-# paste(), strsplit()
+sample.ttest = t.test(rnorm(20, 0, 1), rnorm(20,2,1))
+sample.ttest
+print(sample.ttest)
+printed.ttest = print(sample.ttest)
+
+# special characters: \t, \n, "escaping"  #basically these allow you to format the white space
+x = "here's a cool result: 10"
+cat(x)
+
+x = "here's a cool result: \t10"
+cat(x)
+
+z = "here's a cool result: \n\n\t\t\t\t10"
+cat(z)
+
+cat("some\ntext")
+cat("some\\ntext")  #double slash tells it to just treat the second slash like a character
+cat("some\"text")
+
+# nchar() #number of characters, length of a string
+nchar("hello")
+
+
+# paste() - putting strings into a bigger string.
+paste("hello", "there")
+x = c("here", "are", "some", "strings")
+x
+paste("prefix", x)
+
+#collapse - wihtin paste, if you want to collapse vectors into a single string
+paste (x, collapse = " ")
+
+# strsplit()
+
 
 # stringr package
 
-# grep(), grepl(), gsub()
+# grep() - searches for strings or patterns
+x
+grep("here", x)  #tells you where it found the string, the indices of the vector
+grep("e", x)
+
+# grepl()
+# gsub()
 
 ```
 

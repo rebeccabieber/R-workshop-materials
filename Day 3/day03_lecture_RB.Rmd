@@ -58,21 +58,21 @@ More documentation on Markdown and R Markdown:
     - `save()` then later `load()`
 
 ```{r}
-x <- rnorm(100, mean = 0, sd = 2)
-y <- rnorm(100, mean = 1, sd = 1)
-ttest.results <- t.test(x, y)
-ttest.results
+#x <- rnorm(100, mean = 0, sd = 2)
+#y <- rnorm(100, mean = 1, sd = 1)
+#ttest.results <- t.test(x, y)
+#ttest.results
 
-# what if ttest.results took minutes/hours to compute?
-save(ttest.results, file = "big important object.RData")
-ttest.results
-rm(ttest.results) #removes the object
-ttest.results #see, it's gone!
-load("big important object.RData")    ##loads it, but note that the name of the object is the same as                                        before, and not the name as the object necessarily. After doing                                        the save, recommendin commenting everything out up until the load                                       (i.e. keep the code there, but dont' run it)
-ttest.results
+## what if ttest.results took minutes/hours to compute?
+#save(ttest.results, file = "big important object.RData")
+#ttest.results
+#rm(ttest.results) #removes the object
+#ttest.results #see, it's gone!
+#load("big important object.RData")    ##loads it, but note that the name of the object is the same as                                        before, and not the name as the object necessarily. After doing                                        the save, recommendin commenting everything out up until the load                                       (i.e. keep the code there, but dont' run it)
+#ttest.results
 
-save.image() # saves the *entire* workspace in .RData
-save.image(file = "workspace.RData") # allows you to specify a name for the file
+#save.image() # saves the *entire* workspace in .RData
+#save.image(file = "workspace.RData") # allows you to specify a name for the file
                                      # not loaded by default
 ```
 
@@ -389,14 +389,14 @@ is.na(NA)
 
 ## Generic functions
 ```{r}
-scottdata <- read.csv("scottdata/CognitionPaperModifiedData.csv")
-summary(scottdata)
-summary(scottdata$Corpus)
-example.lm <- lm(HiSegType ~ LoSegType, data = scottdata)
-summary(example.lm)
-class(scottdata)
-class(scottdata$Corpus)
-class(example.lm)
+#scottdata <- read.csv("scottdata/CognitionPaperModifiedData.csv")
+#summary(scottdata)
+#summary(scottdata$Corpus)
+#example.lm <- lm(HiSegType ~ LoSegType, data = scottdata)
+#summary(example.lm)
+#class(scottdata)
+#class(scottdata$Corpus)
+#class(example.lm)
 
 ```
 
