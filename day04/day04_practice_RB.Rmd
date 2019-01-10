@@ -19,6 +19,7 @@ summary(my.iris.scrambled)
 
 ```{r}
 
+summary(my.iris)
 ```
 
 2. Use subsetting (with logicals) to create a data frame of just the virginica species, then re-run `summary()` to check. Then "clean up" the Species factor so that it only has one level. Show how this works for both the original and the "scrambled" data frame.

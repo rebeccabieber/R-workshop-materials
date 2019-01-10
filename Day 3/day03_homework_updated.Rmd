@@ -1,0 +1,46 @@
+---
+title: "Day 3 Homework"
+output: html_document
+---
+
+1. Identify a numeric column in your data. Find the 95th %ile value of that column.
+
+```{r}
+cvsiii <- read.csv(file.choose())
+summary(cvsiii)
+
+minpairs95th <- quantile(cvsiii$Mean.Stimulus1.RT, .95)
+minpairs95th
+```
+
+2. Subset your data to be only include values greater than that extreme 95th %ile
+
+```{r}
+cvsiii.extremehigh <- cvsiii[cvsiii$Mean.Stimulus1.RT >= minpairs95th, ]
+summary(cvsiii.extremehigh)
+
+nrow(cvsiii.extremehigh)/nrow(cvsiii)
+```
+
+3. Now find the lowest 5th %ile, and subset to the data that includes both the lower extremes and upper extremes
+
+```{r}
+minpairs5th <- quantile(cvsiii$Mean.Stimulus1.RT, .05)
+
+minpairs5th
+length(which(cvsiii$Mean.Stimulus1.RT == minpairs5th))
+length(which(cvsiii$Mean.Stimulus1.RT == minpairs5th))/nrow(cvsiii)
+
+cvsiii.extremevalues <- cvsiii[cvsiii$Mean.Stimulus1.RT >= minpairs95th |
+                                       cvsiii$Mean.Stimulus1.RT <= minpairs5th, ]
+#subset for all the things where it's greater than or equal to blah, OR less than equal to blah, all columns
+
+summary(cvsiii.extremevalues)
+
+# changing logicals to get the converse data set
+cvsiii.noextremes <- cvsiii[cvsiii$Mean.Stimulus1.RT < minpairs95th &
+                                    cvsiii$Mean.Stimulus1.RT > minpairs5th, ]
+summary(cvsiii.noextremes)
+
+```
+

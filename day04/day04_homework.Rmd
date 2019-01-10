@@ -7,7 +7,15 @@ output: html_document
 1. Identify a column in your data that *should* be a factor (whether it is or not). Check to see whether R is already treating it as a factor, and if not, convert it into a factor.
 
 ```{r}
+cvsiii = read.csv(file.choose())
 
+summary(cvsiii)
+
+#Contrast should be a factor - and is. 
+#Subject should be a factor - and isn't.
+
+cvsiii$Subject = as.factor(cvsiii$Subject)
+summary(cvsiii$Subject)
 ```
 
 
