@@ -83,6 +83,15 @@ paste("prefix", x)
 paste (x, collapse = " ")
 
 # strsplit()
+y = paste(x, "suffix", sep = "_")
+
+strsplit(y, split = "_")
+
+z = paste(x, "suffix", sep = ".") #r will, for example, make white space in a column name a dot
+z
+
+strsplit(z, split = ".")  #but, dot is a special thing that means 'any character'. so this doesnt work 
+strsplit(z, split = "\\." )
 
 
 # stringr package
@@ -92,10 +101,27 @@ x
 grep("here", x)  #tells you where it found the string, the indices of the vector
 grep("e", x)
 
-# grepl()
-# gsub()
+# grepl() #logical version, returns trues and falses
+          # could use this for logical subsetting
+
+# gsub()  # search and replace function
+          # have you give thing you're searching for, then replacement, then vector
+gsub("e", "E", x)
+
+#gsub("ONH", "oldernorm", cvsiii$AgeGroup) # this isn't working right now. not sure why. maybe because                                                  factors aren't strings? 
+                  
+                                            #update - correct. had to make the column as.character, then run                                             gsub. BUT also have to assign gsub to a new column
+
+#cvsiii$AgeGroup = as.character(cvsiii$AgeGroup)
+#cvsiii$Age_New = gsub("ONH", "oldernorm", cvsiii$AgeGroup)
+
+#then will have to re-factor that new column in order to run whatever analyses. 
+
+longer.thing = c("10F5657", "59J4957", "30K16238")
+gsub(\\d+\\w(\\d+)", "\\1", longer.thing)
 
 ```
+
 
 # Factors
   - Actually numbers under the hood
@@ -115,19 +141,56 @@ grep("e", x)
 ```{r}
 # factor()
 
+x= c(rep("a", 20), rep("b", 20), rep("c", 20))
+x
+summary(x)
+
+x.factor = factor(x)
+summary(x.factor)
+
 # levels()
+levels(x.factor)
 
 # summary()
 
-# coersion
+
 
 # subsetting
+mysleep = sleep
+summary(mysleep)
 
-# droplevels
+class(mysleep$group)
+levels(mysleep$group)
+
+
+mysleep.group1 = mysleep[mysleep$group == '1',]
+summary(mysleep.group1)
+
+# droplevels    #gets rid of any factor levels that have 0 observations
+mysleep.group1 = droplevels(mysleep.group1)
+summary(mysleep.group1)
 
 # changing levels (labels)
+mysleep = sleep
+levels(mysleep$group)
+
+levels(mysleep$group) = c("pre", "post")
+levels(mysleep$group)
+summary(mysleep)
 
 # re-ordering
+mysleep = sleep
+levels(mysleep$group) = c("pre", "post")
+summary(mysleep)
+levels(mysleep$group)
+
+#how to make it so pre is the reference level?
+mysleep$group2 = mysleep$group #created new column basically cloning the group
+mysleepgroup2 = factor(mysleep$group2, levels = c("post", "pre"))
+
+
+
+# coersion
 
 ```
 

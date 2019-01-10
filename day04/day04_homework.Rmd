@@ -8,7 +8,7 @@ output: html_document
 
 ```{r}
 cvsiii = read.csv(file.choose())
-
+attach(cvsiii)
 summary(cvsiii)
 
 #Contrast should be a factor - and is. 
@@ -22,6 +22,12 @@ summary(cvsiii$Subject)
 2. What are the levels of the factor? How many occurrences of each level are there in the data? Are the levels ordered in a sensible/meaningful way?
    
 ```{r}
+
+summary(AgeGroup)
+levels(AgeGroup)
+#this factor has 3 levels - YNH, ONH, OHI. I would like the factors to be ordered as such, but they are not. 
+
+
 
 ```
 
