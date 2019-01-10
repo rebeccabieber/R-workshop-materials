@@ -49,9 +49,10 @@ xtabs(~Age_numeric, AgeGroup, data= cvsiii)
 ```{r}
 
 cvsiii$Age_copy = cvsiii$AgeGroup
+levels(AgeGroup)
 
-cvsiii$
-
+levels(cvsiii$Age_copy) = c("Older HI", "Older NH", "Younger NH")
+levels(cvsiii$Age_copy)
 ```
 
 
@@ -62,6 +63,14 @@ cvsiii$
 
 ```{r}
 
+cvsiii$Age_copy = relevel(cvsiii$Age_copy, "Older NH")
+summary(cvsiii)
+
+neworder = c("Younger NH", "Older HI", "Older NH")
+cvsiii$Age_copy = reorder(cvsiii$Age_copy, neworder)     #not sure what to do about this error.
+
+cvsiii$Age_copy = factor(cvsiii$Age_copy, levels = c("Younger NH", "Older NH", "Older HI"))
+summary(cvsiii)
 
 ```
 
@@ -73,6 +82,14 @@ cvsiii$
   d. If you have any NAs in your data, describe why you think those values are missing. Does there appear to be any systematic relationship between missingness and other variables in your data?
 
 ```{r}
+
+#no missing values
+
+length(which (is.na(cvsiii) == TRUE))
+
+cvsiii$nas = NaN
+
+length(which (is.na(cvsiii) == TRUE))
 
 
 ```
@@ -93,5 +110,12 @@ cvsiii$
 
 ```{r}
 
+#I want to enter a column for age (in years) for each participant. But each participant has multiple lines of data, so Ill need to use some kind of conditional. (I don't think this will use bind or merge, and we haven't covered them yet, but I want to try it anyway.)
+
+cvsiii$Years = NA
+cvsiii$Subject = as.factor(cvsiii$Subject)
+cvsiii$Years = ifelse(cvsiii$Subject == "1101", 28, NA)
+
+#ok, this would take a while if you were doing it for each subject individually. #can I use cbind as a conditional of sorts? 
 
 ```
