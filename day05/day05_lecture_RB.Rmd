@@ -389,6 +389,8 @@ ggplot(sw, aes(mass)) + geom_histogram()
 
 ggplot(sw, aes(mass, height)) + geom_point()
 
+ggplot(sw, aes(mass, height)) + geom_point(aes(color = gender))
+
 # geom_text()
 ggplot(sw, aes(mass, height)) + geom_text(aes(label = name))
 
