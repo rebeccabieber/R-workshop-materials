@@ -117,13 +117,6 @@ mytest$p.value
 #for S4 classes, you'll see an @ instead of  $
 
 
-```
-
-# Creating data frames
-  - handy, especially for making "look-up tables"
-  
-```{r}
-# data.frame()
 mysleep = sleep
 
 
@@ -134,19 +127,55 @@ mysleep[["extra"]] #gives us back a vector
 mysleep[, "extra"]
 mysleep["extra"] #here, still a list (still a dataframe)
 
+```
+
+# Creating data frames
+  - handy, especially for making "look-up tables"
+  
+```{r}
+# data.frame()
+
+my.df = data.frame(var1 = rnorm(20,0,1), 
+           var2 = rnorm(20,0,2), 
+           missing = NA, 
+           condition = rep(c("A", "B"), each = 2))
+
+summary (my.df)
+
 # stringsAsFactors argument
 
+my.df.nofactors = data.frame(var1 = rnorm(20,0,1), 
+                             var2 = rnorm(20,0,2), 
+                             missing = NA, 
+                             condition = rep(c("A", "B"), each = 2), stringsAsFactors = FALSE)
+
+summary(my.df.nofactors)
 ```
 
 # Intro to `dplyr`
 
 ```{r}
+#dplyr is all about manipulating data
+library(dplyr)
 
 ```
 
 ## subsetting with `dplyr`
 
 ```{r}
+
+mysleep = sleep
+mysleep.group1 = mysleep[mysleep$group %in% "1", ] #old way
+class(mysleep.group1)
+
+mysleep.group1.dplyr = filter(mysleep, group %in% "1") #dplyr way. filter() takes a conditional
+
+mysleep.group1.dplyr = mysleep %>% filter(group %in% "1") #other dplyr way? something when you put things through dplyr, you get structures fancier than plain data frames, like tibbles. 
+
+
+
+mysleep.group2 = mysleep[mysleep$ID %in% c("1", "4", "7"), ]
+
 
 ```
 
@@ -162,22 +191,35 @@ mysleep["extra"] #here, still a list (still a dataframe)
 
 ```{r}
 
+mysleep = sleep
+mysleep$extra2 = mysleep$extra #creates a new column with the values currently existing in 'extra', base R
+
+#mutate() from dplyr
+mysleep = mutate(mysleep, extra3 = extra) #dplyr way uses mutate()
+head(mysleep)
+
+
 ```
 
 ## Simple column transformations
 
 ```{r}
+mysleep = sleep
+mysleep$doubleextra = mysleep$extra * 2
+head(mysleep)
 
+# easy way to do things like log transforming
+
+mysleep$logextra = log(abs(mysleep$extra))
+head(mysleep)
+
+#dplyr style - also uses mutate
+
+mysleep = mutate(mysleep, logextra2 = log(abs(extra)))
+head(mysleep)
 
 ```
 
-## `dplyr` style: `mutate()`
-
-```{r}
-
-```
-
-# PRACTICE
 
 # Combining data frame objects
 ## `rbind()` and `cbind()`
@@ -189,11 +231,70 @@ mysleep["extra"] #here, still a list (still a dataframe)
     - glues columns next to each other
     - need to be the same length    
 ```{r}
+mysleep = sleep #"here's a case where factors are going to be annoying"
+summary(mysleep)
+#let's say we've collected data on two more people
+newsleep = data.frame(extra = rnorm(4), 
+                      group = rep(c("1", "2"), each = 2),
+                      ID = rep(c("11", "12"), 2))
+newsleep
 
+allsleep1 = rbind(mysleep, newsleep)
+summary(allsleep1)
+
+newsleep2 = data.frame(extra = rnorm(4), 
+                      group = rep(c("1", "2"), each = 2),
+                      ID = rep(c("11", "12"), 2), 
+                      gender = rep(c("M", "F"), 2))
+
+
+allsleep2 = rbind(newsleep, newsleep2)
+summary(allsleep2)
+
+
+allsleep3 = bind_rows(mysleep, newsleep2) #throws errors because mismatching character/factor. be careful!
+summary(allsleep3)
 ```
+
 
 ## `merge()` from `base` R, and `*_join()` from `dplyr` package
 ```{r}
+mysleep = sleep
+
+#lets say we have table of age info, 
+
+sleepages = data.frame(ID = as.character(1:10), 
+                       age = sample(20:50, 10))
+sleepages
+
+#now we want that age data in the sleep data frame to do correlations or whatever. 
+
+#must have some sort of linking variable - allows matching of two dataframes.
+
+sleepmerged = merge(mysleep, sleepages) #this is a simple situation! same column names, same values, so on.
+sleepmerged
+
+
+sleepages2 = data.frame(ID = as.character(3:12), #what happens if we make it mismatch a bit??
+                       age = sample(20:50, 10))
+sleepmerged2 = merge(mysleep, sleepages2) #this is a simple situation! same column names, same values, so on.
+sleepmerged2    #now we get a subset - no data for 11 and 12, and people 1 and 2 disappear. need the argument called 'all' *it's false by default* - easy to forget. 
+
+sleepmerged3 = merge(mysleep, sleepages2, all = TRUE)
+sleepmerged3        #keeps everything and sticks in NAs
+
+
+#dplyr way uses *_join
+sleep.inner = inner_join(mysleep, sleepages2, by = "ID") #same as first - drops the non-overlap
+sleep.inner
+
+sleep.full = full_join(mysleep, sleepages2, by = "ID") #gives everything
+sleep.full
+
+sleep.left = left_join(mysleep, sleepages2, by = "ID") #starts with the *left* dataframe (mysleep), keeps that and appends as much as possible from the other.
+sleep.left
+
+
 
 ```
     - simplest: have ONE column in common, named the same thing (with the same values)
