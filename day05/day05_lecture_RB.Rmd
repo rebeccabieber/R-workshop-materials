@@ -81,7 +81,7 @@ x = c(1, "two", FALSE) #c() makes it a vector, we get coersion, etc
 y = list(1, "two", FALSE) 
 y
 
-#for vectors, use single brackets to pull a single thing
+      #for vectors, use single brackets to pull a single thing
 x[1]
 
 y[1] #each item in a list is still a list
@@ -89,13 +89,33 @@ y[[1]] #use double brackets to get the thing inside it - just the value
 
 
 # unlist() #turns a list into a vector
+x = "type_instance"
+strsplit(x, split = "_")
 
-
+unlist(strsplit(x, split = "_"))
 
 # names() and str()
+x = list(1, "two", FALSE)
+names(x)
+names(x) = c("first", "second", "third")
 
+x[[2]]
+x[["second"]]
 
 # pulling apart t-test object
+
+mytest = t.test(rnorm(20, 1), rnorm(20, 2))
+mytest
+
+names(mytest)
+str(mytest)
+mytest$p.value
+
+#S3 vs S4 classes
+#S3 - basic, S4 - fancy
+#if you look at the bottom of the output structure, you see "class"0 = chr "htest"
+#for S4 classes, you'll see an @ instead of  $
+
 
 ```
 
@@ -104,6 +124,15 @@ y[[1]] #use double brackets to get the thing inside it - just the value
   
 ```{r}
 # data.frame()
+mysleep = sleep
+
+
+nrow(mysleep)
+length(mysleep)   #mysleep is just a fancy list. the numbers of the lists are columns. 
+
+mysleep[["extra"]] #gives us back a vector
+mysleep[, "extra"]
+mysleep["extra"] #here, still a list (still a dataframe)
 
 # stringsAsFactors argument
 
