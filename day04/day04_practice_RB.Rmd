@@ -26,6 +26,20 @@ summary(my.iris)
 
 ```{r}
 
+my.iris_vir = my.iris[my.iris$Species == "virginica", ]
+summary(my.iris_vir)
+
+my.iris_vir = droplevels(my.iris_vir)
+summary(my.iris_vir)
+
+
+my.iris.scrambled_vir = my.iris.scrambled[my.iris.scrambled$Species == "virginica", ]
+summary(my.iris.scrambled_vir)
+
+my.iris.scrambled_vir = droplevels(my.iris.scrambled_vir)
+summary(my.iris.scrambled_vir)
+
+
 ```
 
 3. In the full data set (your copy), create different versions of the Species column:
@@ -34,17 +48,34 @@ summary(my.iris)
    
 ```{r}
 
+my.iris$Species_num = as.numeric(my.iris$Species)
+class(my.iris$Species_num)
+
+my.iris$Species_char = as.character(my.iris$Species)
+class(my.iris$Species_char)
+
 ```
 
 4. Use `xtabs()` to see how the values in these new columns line up with the original factor column.
 
 ```{r}
 
+xtabs(~Species + Species_num, data = my.iris)
+
+xtabs(~Species + Species_char, data = my.iris)
+
 ```
 
 5. Create another column that is a copy of the factor column. Now, recode this new column so that the factor levels have new names. 
 
 ```{r}
+levels(my.iris$Species)
+
+my.iris$Species_new = my.iris$Species
+levels(my.iris$Species_new) = c("set", "vers", "virg")
+
+
+summary(my.iris)
 
 ```
 
@@ -55,6 +86,16 @@ summary(my.iris)
 
 ```{r}
 
+levels(my.iris$Species)
+
+my.iris$specis_relevel = relevel(my.iris$Species, "setosa")
+summary(my.iris)
+
+
+my.iris$specis_reorder = reorder(my.iris$Species, "versicolor") #still don't get this.
+
+my.iris$specis_factor = factor(my.iris$Species, c("versicolor, setosa", "virginica"))
+summary(my.iris)
 ```
 
 7. Explore coersion! Try to make a series of vectors with combinations from each of these data types:
@@ -66,6 +107,16 @@ summary(my.iris)
 For each combination, see what happens, by using `typeof()`, `class()` and `print()` before and after.
 
 ```{r}
+
+X = paste("hello", 42, TRUE)
+class(X)
+
+Y = paste("hello", c(colnames(my.iris)), "goodbye")
+class(Y)
+
+z = paste(42, TRUE, 12, 18)
+class(z)
+
 
 ```
 
