@@ -317,6 +317,8 @@ http://accidental-art.tumblr.com/
 ```{r}
 ?anscombe
 example("anscombe")
+
+
 ```
 
 ## Two systems
@@ -372,13 +374,24 @@ example("anscombe")
 library(ggplot2)
 ?starwars
 
+sw = starwars
+head(sw)
+
+
+
 # geom_histogram()
+ggplot(sw, aes(mass)) + geom_histogram()
+
 
 # geom_density()
 
 # geom_point()
 
+ggplot(sw, aes(mass, height)) + geom_point()
+
 # geom_text()
+ggplot(sw, aes(mass, height)) + geom_text(aes(label = name))
+
 
 # geom_boxplot()
 
