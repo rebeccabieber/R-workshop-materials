@@ -1,0 +1,102 @@
+---
+title: "Day 7 Practice"
+output: html_document
+---
+
+
+# Section 1
+
+0. Load packages and make a copy of the `french_fries` data (from the `reshape2` package) in your workspace.
+
+```{r}
+library(tidyverse)
+library(reshape2)
+ff <- french_fries
+
+```
+
+1. Reshape the french fries data to a "long" format, where all of the flavor ratings are in a single column, and another column designates the flavor "dimension" or "scale".
+
+```{r}
+head(ff)
+summary(ff)
+
+ff.long = gather(ff, flavor.dimension, rating, potato:painty)
+head(ff.long)
+summary(ff.long)
+```
+
+
+2. Now reshape this so that the ratings under different treatments are in different columns. HINT: you may want to change the factor level labels before reshaping.
+
+```{r}
+
+levels(ff.long$treatment) = c("oil1", "oil2", "oil3")
+head(ff.long)
+summary(ff.long)
+
+ff.long.2 = spread(ff.long, treatment, rating)
+summary(ff.long.2)
+head(ff.long.2)
+
+```
+
+
+3. Plot scatterplots and regression lines for pairs of different treatment types using this "wide" data. Also use `cor()` or `cor.test()` to test the correlations, and compare those results to the plots.
+
+```{r}
+ggplot(ff.long.2, aes(oil1, oil2)) + geom_point()
+
+
+
+```
+
+
+# Section 2
+
+4. Define a function that computes the standard error of a mean. The formula is "the standard deviation divided by the square root of the number of observations". Check that it works with some (generated) random data. 
+
+```{r}
+
+
+st.err = function(x, na.rm = FALSE) {
+  output = sd(x) / sqrt(length(x))
+  output }
+  
+
+st.err(x = rnorm(1e5, sd = 3))
+
+
+```
+
+
+5. With the french fries data, use `group_by()` and `summarize()` to get some summary statistics for the "potato" ratings by treatment, collapsed over time, subject, and rep.  Compute the mean, standard deviation, number of observations, and standard error for each treatment. For the latter, use your function from above.
+
+```{r}
+
+ff = french_fries
+
+summarize(group_by(ff, treatment), mean.potato = mean(potato, na.rm = TRUE), 
+                                  sd.potato = sd(potato, na.rm = TRUE), 
+                                  n = length(potato),
+                                  sterr.potato = st.err(potato))
+
+ff.means = ff %>%
+  group_by(treatment) %>%
+  summarize(mean.rating = mean(potato, na.rm = TRUE), se = st.err(potato))
+
+
+
+```
+
+
+6. Using these summary values, plot the means and 95% confidence intervals using `geom_point` and `geom_errorbar`. HINT: use +/- 1.96 * the standard error for the upper and lower bounds of the 95% CI.
+
+```{r}
+
+ggplot(ff.means, aes(treatment, mean.rating)) + geom_point() +
+  geom_errorbar(aes(ymin = mean.rating - se*1.96, ymax = mean.rating + se*1.96))  #this is how error bar works
+
+```
+
+
