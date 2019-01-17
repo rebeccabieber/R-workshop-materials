@@ -16,6 +16,30 @@ output: html_document
 
 # Questions/review?
 
+```{r}
+#question about factors, and releveling, etc
+
+mydata = data.frame(n = 1:10, 
+                   measure = rnorm(10), 
+                   myfactor = c(rep("pre", 4), rep("post", 6)), 
+                   stringsAsFactors = FALSE)
+
+head(mydata)
+summary(mydata)
+
+mydata$myfactor2 = as.factor(mydata$myfactor)
+summary(mydata)
+levels(mydata$myfactor2)
+
+mydata$myfactor3 = factor(mydata$myfactor, levels = c("pre", "post"))
+
+mydata$myfactor4 = factor(mydata$myfactor, levels = c("pre", "post", "something else"))
+summary(mydata)
+
+```
+
+
+
 # if/else
   - form: if(LOGICAL TEST) { CODE BLOCK if TEST == TRUE  }
   -       else if(OPTIONAL ADDITIONAL TEST) { CODE BLOCK if TRUE }
@@ -24,6 +48,83 @@ output: html_document
 
 ```{r}
 # simple examples
+# first curly bracket has to be on the same line as the if. usualy you indent the first line after the if
+# this is all style but R does some of it by default
+# careful that what you put in the if() only results in ONE T/F, not a whole vector
+
+x = 3
+
+if(x < 5) {
+  print("x is small")
+}
+
+
+x = 6
+
+if(x < 5) {
+  print("x is small")
+}
+
+
+#Here, white space matters!!!!  'else' has to be on the same line as the closing } for the if statement
+
+x = 6
+
+if(x < 5) {
+  print("x is small")
+} else {
+  print("x must be large")
+}
+
+
+# Can keep adding elses and ifs
+
+
+# Else really only applies to the previous if
+# next if has to be OUTSIDE of braces
+# things in braces are the code you want to HAPPEN, outside braces is conditional
+
+x = 5
+
+if(x < 5) {
+  print("x is small")
+} else if (x > 5) {
+  print("x is too large")
+} else {
+  print ("x is just right")
+}
+
+
+#what about NAs??
+
+x = NA
+
+if(is.na(x)) {
+  print("x is missing, go find an x!")
+} else if(x < 5) {
+  print("x is small")
+} else if (x > 5) {
+  print("x is too large")
+} else {
+  print ("x is just right")
+}
+
+# have to put the NA condition first, otherwise you're in trouble.
+# once an if returns true, all following elses are totally ignored
+
+# what if you had a vector as x? it only checks the first value, and throws a warning.
+
+x = 1:6
+
+if(is.na(x)) {
+  print("x is missing, go find an x!")
+} else if(x < 5) {
+  print("x is small")
+} else if (x > 5) {
+  print("x is too large")
+} else {
+  print ("x is just right")
+}
 
 ```
 
@@ -31,7 +132,15 @@ output: html_document
     - arguments are: test = [LOGICAL TEST], yes = [VALUE if TEST == TRUE], no = [VALUE if TEST == FALSE]
 
 ```{r} 
+#ifelse as a function, allows you to work with a vector - i.e. comparing vectors to another, or something
 
+x = 1:10
+ifelse(x %% 2 == 0, "even", "odd")   ## %% is "modulo" means remainder of a division. so if the remainder is 0 it's even
+
+ifelse(x %% 2 == 0, "even",
+       ifelse (x %% 3 == 0, "divisible by three", "some other odd")) #can nest ifelse's
+
+#ifelse() is more useful for bigger things. 
 
 ```
 

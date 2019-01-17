@@ -9,6 +9,35 @@ output: html_document
 
 ```{r}
 
+x = "wrong"
+
+if(x == 'right') {
+  print('you win!')
+} else if(x == 'wrong') {
+  print('you lose!')
+} else {
+  print ('the result is inconclusive')
+}
+
+
+#scott's method
+
+x = "right"
+
+if(x %in% 'right') {
+  print('you win!')
+} else if(x %in% 'wrong') {
+  print('you lose!')
+} else {
+  print ('the result is inconclusive')
+}
+
+
+#can do things with functions in here, use things like sapply to apply the complicated function to a whole bunch of values
+
+
+# look at scott's final practice doc to get this.
+
 
 ```
 
@@ -20,6 +49,23 @@ output: html_document
   - make a plot in ggplot2 to confirm that you did this right
   
 ```{r}
+
+my.iris = iris
+
+my.iris$new = ifelse(my.iris$Sepal.Length < 5,"low", "nope")
+
+my.iris$new = ifelse(my.iris$Sepal.Length < 5,"low", 
+                     ifelse(my.iris$Sepal.Length > 6, "high",
+                            ifelse(my.iris$Sepal.Length <= 6 & my.iris$Sepal.Length >=5, "mid","")))
+
+my.iris$new = factor(my.iris$new, levels = c("low", "mid", "high"))
+
+levels(my.iris$new)
+
+ggplot(my.iris, aes(new, Sepal.Length)) + geom_boxplot()
+
+
+ggplot(my.iris, aes(new, Sepal.Length)) + geom_boxplot() + ggtitle("Boxplot")
 
 
 ```
