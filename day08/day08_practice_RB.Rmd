@@ -58,15 +58,20 @@ my.iris$new = ifelse(my.iris$Sepal.Length < 5,"low",
                      ifelse(my.iris$Sepal.Length > 6, "high",
                             ifelse(my.iris$Sepal.Length <= 6 & my.iris$Sepal.Length >=5, "mid","")))
 
+
+#don't really need the last ifelse with the >= <=, mid could also just be the 'no' argument.
+
 my.iris$new = factor(my.iris$new, levels = c("low", "mid", "high"))
 
 levels(my.iris$new)
 
 ggplot(my.iris, aes(new, Sepal.Length)) + geom_boxplot()
 
-
 ggplot(my.iris, aes(new, Sepal.Length)) + geom_boxplot() + ggtitle("Boxplot")
 
+
+ggplot(my.iris, aes(Sepal.Length)) + geom_histogram()
+ggplot(my.iris, aes(Sepal.Length)) + geom_histogram(aes(fill = new))
 
 ```
 
@@ -81,6 +86,41 @@ ggplot(my.iris, aes(new, Sepal.Length)) + geom_boxplot() + ggtitle("Boxplot")
 
 ```{r}
 
+#what do I want? need to loop SPECIES and SPECIES number
+
+levels(my.iris$Species)
+
+for(levelnum in 1:length(levels(my.iris$Species))) {
+  print(levelnum)
+}
+
+
+for(levelnum in 1:length(levels(my.iris$Species))) {
+  print(paste("Level number", levelnum))
+}
+
+
+for(levelnum in 1:length(levels(my.iris$Species))) {
+  this.level = levels(my.iris$Species)[levelnum] #can create another variable within the loop
+  print(paste("Level number", levelnum, "of Species is", this.level))
+}
+
+
+#can use cat() instead of print(), but then you have to add the line return
+
+for(levelnum in 1:length(levels(my.iris$Species))) {
+  this.level = levels(my.iris$Species)[levelnum] #can create another variable within the loop
+  cat(paste("Level number", levelnum, "of Species is", this.level, "\n"))
+}
+
+
+# looping through strings (instead of through numbers, like above)
+
+for(this.level in levels(my.iris$Species)) {
+  levelnum = which(levels(my.iris$Species) %in% this.level)
+  print(paste("Level number", levelnum, "of Species is", this.level))
+}
+
 
 ```
 
@@ -93,6 +133,20 @@ ggplot(my.iris, aes(new, Sepal.Length)) + geom_boxplot() + ggtitle("Boxplot")
 ```{r}
 # ggtitle() example
 ggplot(iris, aes(Sepal.Width)) + geom_histogram() + ggtitle("All species")
+
+
+#do something once
+pdf("all species plot.pdf")
+
+for(levelnum in 1:length(levels(my.iris$Species))) {
+  this.level = levels(my.iris$Species)[levelnum] #can create another variable within the loop
+  this.data = my.iris[my.iris$Species %in% this.level, ]
+  pdf(paste(this.level, "plot.pdf"))
+  print(ggplot(this.data, aes(Sepal.Width)) + geom_histogram() + 
+          ggtitle(this.level))
+  dev.off()
+}
+
 
 ```
 

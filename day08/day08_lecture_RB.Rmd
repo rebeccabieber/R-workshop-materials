@@ -151,9 +151,81 @@ ifelse(x %% 2 == 0, "even",
   - avoid re-writing code, when possible!
 
 ```{r}
+# loops let you re-use code! woo hoo!
+
+# simple vectorized - the plus 2 applies to everything in the vector.
+x = 1:10
+x + 2
+
+
 # basic structure of a loop
+# basic loops are 'for' loops
+#counter in some vector
+
+#looks like the if then, but not.
+#going to go through the code block a bunch of times, once for each value in the vector. 
+#fist time through, counter = 1, then 2, then etc
+
+for(counter in 1:10) {
+  print(counter)
+}      
+
+
+
+for(counter in c("here", "are", "some", "strings")) {
+  print(counter)
+}  
+
+#where does 'counter' come from? we make it up. name of the variable that will get assigned a new value each time through the loop
+
+values.to.print = c("a", "b", "c", "d")
+for(counter in values.to.print) {
+  print(counter)
+}
+
+
+values.to.print = c("a", "bee", "c", "dee")
+
+for(counter in values.to.print) {    #behind the scenes: counter is "a", ... etc
+  if(nchar(counter) == 1) {   #checking if length of the counter is equal to one
+    print (counter)
+  } else {
+    break                 #gives up on the loop
+  }
+}
+
+#note, though, that the value of counter is currently "bee". So you can print counter in your console to see where the loop broke if you're troubleshooting something. 
+
+
 
 # going from copy-paste to a loop
+
+#'what if we wanted to get a summary of sleep data.., of group1 and group 2'
+
+mysleep = sleep
+summary(mysleep)
+
+summary(mysleep[mysleep$group ==1, ])
+summary(filter(mysleep, group == 1))  #two ways to do this.
+
+#now I want to see group 2. could copy paste and change to a 2
+
+summary(mysleep[mysleep$group ==2, ])
+
+#if you're copy/pasting and changing ONE thing - ideal for a loop
+
+for(this.group in c("1", "2")) {
+  print(summary(mysleep[mysleep$group ==this.group, ]))
+  
+}
+
+#have to put explicit print statements in the loop!
+
+for(i in c("1", "2")) {
+  print(i)
+}
+
+#you name the variable! some people just call it i. scott thinks it's good to label it explicitly
 
 ```
 
@@ -161,22 +233,34 @@ ifelse(x %% 2 == 0, "even",
 
 ```{r}
 # "Poor man's progress bar"
+#might have loop that takes a long time to run....how can you know what's happening?
 
+for(counter in 1:1e5) {
+  if(counter %% 100 == 0) { cat(paste("Starting iteration", counter, "\n")) }
+  mymean = mean(rnorm(1e6))
+}
+
+# sometimes when you're going through a loop, you want to set the counter equal to a string. below, might want to do a different histogram for each column in iris dataset.
 
 # using get() to access objects programmatically
-ggplot(iris, aes(Sepal.Width)) + geom_histogram()
-ggplot(iris, aes("Sepal.Width")) + geom_histogram()
-ggplot(iris, aes(get("Sepal.Width"))) + geom_histogram()
+ggplot(iris, aes(Sepal.Width)) + geom_histogram()  #this works
+ggplot(iris, aes("Sepal.Width")) + geom_histogram() #this does not work. it's a string
+ggplot(iris, aes(get("Sepal.Width"))) + geom_histogram() #this works! get() gives you the object that the string is a name of.
 
-# you need explicit "print" statements inside loops
+
+
+# also you need explicit "print" statements inside loops
+
 for(this.dim in colnames(iris)[1:4]) {
   
 }
 
 # also for plots!
+
 for(this.dim in colnames(iris)[1:4]) {
-  
-}
+  print(ggplot(iris, aes(get(this.dim))) + geom_histogram() +xlab(this.dim))
+
+  }
 
 ```
 
