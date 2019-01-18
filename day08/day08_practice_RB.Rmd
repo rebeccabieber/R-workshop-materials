@@ -148,6 +148,8 @@ for(levelnum in 1:length(levels(my.iris$Species))) {
 }
 
 
+#Can also - start pdf first, take out the pdf command in the loop, and put dev.off after the loop, to make one document with a new page for each plot
+
 ```
 
 # Section 2
