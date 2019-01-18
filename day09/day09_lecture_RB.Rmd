@@ -921,6 +921,9 @@ my.pvals.v2 <- function(data, DV, factor) {
 ### insert "print" statements
 
 ```{r}
+
+#can use a progress bar, or to see at which point the thing breaks 
+
 my.pvals.v2(mysleep3, DV = "time.sleep", factor = "condition")
 
 my.pvals.v2 <- function(data, DV, factor) {
