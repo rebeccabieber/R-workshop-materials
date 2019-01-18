@@ -101,9 +101,13 @@ dev.off() #stops the pdf
 
 png("iris regression.png", height = 2, width = 4, units = "in", res = 300) #prefers to specify the dimensions of the plot and the resolution
 
-ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point() + geom_smooth(method = "lm") + ggtitle("iris regression")
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point() + geom_smooth(method = "lm") + 
+ggtitle("iris regression")
 
 dev.off() #stops the png
+
+#messing with the scales for facet_wrap
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point() + geom_smooth(method = "lm") + ggtitle("iris regression") + facet_wrap(~Species, scales = "free_x")
 
 ```
 
@@ -138,6 +142,36 @@ for(counter in 1:1000) { # pretend that counter == 843 is bad, we want to skip i
   - if you get an error, the counter variable is at the value when things broke
   - insert `print()` statements to check on things mid-loop
   - manually set the counter variable value, step through the loop
+  
+```{r}
+#this is a dumb example, a quick way to show how you'd fix something that breaks differently each time.
+log(rnorm(10,3,1))
+
+values = rnorm(1e6, 3, 1)
+
+#creating results container
+my.results = vector()
+length(my.results) = length(values)
+
+#going one by one through the values to get the log of each value. dumb way to do this
+for (this.value in 1:length(values)) {
+  my.results[this.value] = log(values[this.value])
+}
+
+summary(my.results) #lots of warnings with NAs! why?
+
+#how to troubleshoot? adding an if statement
+
+for (this.value in 1:length(values)) {
+  my.results[this.value] = log(values[this.value])
+  if(is.na(my.results[this.value])) { break }
+}
+
+this.value #retrieves which one you're on
+values [1330] #retrieves what the value was. it's negative! can't take log of a negative
+```
+  
+  
 
 ===========
 # Functions
@@ -154,14 +188,26 @@ for(counter in 1:1000) { # pretend that counter == 843 is bad, we want to skip i
 ```{r eval = FALSE}
 my.function <- function(arg1, arg2, ...) {
   #FUNCTION BODY  
+  return(the.value.you.want.returned)
+  #last value in function body is default for return()
 }
+
+#basic function, you create an object, use function function, then you define all the arguments. 
+#can think about it as how it should/would look in the help file. 
+#then your function body. can put in explicit return() or not
+
+
+#relationship between functions and loops.
+# a loop can easily modify other variables from the workspace
+# a FUNCTION creates its own miniature world that insulated from the rest of the code.
+# first place the function looks for things is in its arguments.
 
 ```
 
 ## Transitioning from a loop to a function
 
 ```{r}
-
+all.species = 
 
 ```
 
