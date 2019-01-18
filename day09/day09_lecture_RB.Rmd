@@ -207,8 +207,75 @@ my.function <- function(arg1, arg2, ...) {
 ## Transitioning from a loop to a function
 
 ```{r}
-all.species = 
 
+# with a loop
+all.species <- unique(as.character(my.iris$Species)) 
+
+# set up container to "store" results
+byspecies.results <- list()
+length(byspecies.results) <- length(all.species)
+names(byspecies.results) <- all.species
+
+# loop over species names
+for(this.species in all.species) {
+ this.data <- my.iris[my.iris$Species == this.species, ]
+ byspecies.results[[this.species]] <- 
+   lm(Sepal.Width ~ Sepal.Length, data = this.data)
+}
+
+names(byspecies.results)
+str(byspecies.results)
+
+#above, made a loop to do some stuff
+
+#creates a function. deciding what is going in/out of that function
+run.my.regression = function(species, data = iris) {
+  species.data = data[data$Species == species, ]       #when it gets to this line of code, function looks for                                                         data, and first looks in it's own arguments. we                                                               defined data above.
+                                                        #subsetting by the species argument
+  output = lm(Sepal.Width ~ Sepal.Length, data = data) #saves an output object
+  output
+}
+
+result1 = run.my.regression(species = "setosa")
+summary(result1)
+
+result2 = run.my.regression(species = "virginica")
+summary(result2)
+
+# now we have a made a kind of dumb limited use case function. assumes a species column and certain data columns
+
+#make more general by adding arguments to the function
+run.my.regression = function(species, regression.formula, data = iris) {
+  species.data = data[data$Species == species, ]      
+  output = lm(regression.formula, data = data) 
+  output
+}
+
+result3 = run.my.regression(species = "virginica", regression.formula = Sepal.Length~Sepal.Width, data = iris)
+summary(result3)
+
+```
+
+
+```{r}
+#question about changing things in the global workspace. possible but don't do it.
+
+x = 1:10
+
+doublelog = function(x) {
+  x = 2*log(x)
+  return(x)
+}
+
+y = doublelog(x)
+y
+
+evil.doublelog = function(x) {
+  x <<- 2*log(x)              ## <<- changes a thing in the global environment
+  return(x)
+}
+
+  
 ```
 
 
@@ -221,12 +288,12 @@ all.species =
 ```{r}
 x <- 1:10
 
-x * 3 # "true" vectorization
+x * 3 # "true" vectorization, multiplies each thing in the vector
 
 x <- 1:1e6
-system.time(y <- x * 3)
+system.time(y <- x * 3) #tells you how long something took to run (and runs it)
 
-y2 <- vector(length = length(x))
+y2 <- vector(length = length(x))   #stepping through our million long x and putting results in y2, can see                                        that it's slower
 system.time(for(i in x) {
   y2[i] <- x[i] * 3
 })
@@ -241,9 +308,31 @@ system.time(for(i in x) {
   - good for just applying a function to each thing in a vector
 
 ```{r}
+#this is base R
+#s stands for simple. gives you back a vector
+
+head(iris)
+#say we want SD for each of the columns
+#sapply works for anything that has a length dimension, great to run over every member of a thing
+
+length(iris[, 1:4])
+sapply(iris[, 1:4], FUN = sd)
+
 
 # anonymous functions
+#what if I wanted to get a quick standard error for each of these?
+# could define function separately
 
+std.err = function(x) {
+  sd(x)/sqrt(length(x))
+}
+
+sapply(iris[, 1:4], std.err)
+
+#what if I didn't want to do all the seaprate steps, but do it at once?
+
+sapply(iris[, 1:4], function(x) sd(x)/sqrt(length(x))) #works as a short one-off function definition
+#for every member of the thing, it gets passed to the 'anonymous' function (doesn't get a name). 
 
 ```
 
@@ -257,6 +346,28 @@ system.time(for(i in x) {
 
 ```{r}
 
+#what if we wanted to do something with more than one column at a time
+myris = iris
+
+head(myris)
+#want a column that's the average of each of the 4 columns, or something
+
+myris$petal.sum = myris$Petal.Length+myris$Petal.Width #could do this
+head(myris)
+
+myris$avg = mean(myris$Petal.Length:myris$Petal.Width) #doesn't do what you'd think!
+head(myris)
+
+
+#here's what to do
+myris$allmean = apply(myris[, 1:4], MARGIN = 1, mean) #MARGIN 1 means row wise
+head(myris)
+
+
+apply(myris[, 1:4], MARGIN = 2, mean) #MARGIN 2 gets you column means
+
+
+#DPLYR way? we'll get to that later
 
 
 ```
@@ -309,15 +420,32 @@ system.time(for(i in x) {
 
 ```{r}
 mysleep <- sleep
-mysleep.means <- group_by(mysleep, group) %>% summarize(mean = mean(extra), sd = sd(extra))
+mysleep.means <- group_by(mysleep, group) %>% summarize(mean = mean(extra), sd = sd(extra), se = std.err(extra))
 mysleep.means
-summarize(mysleep, mean = mean(extra), sd = sd(extra))
+summarize(mysleep, mean = mean(extra), sd = sd(extra))  #saves you a step
 
 ```
 
 ### `mutate()` and `rowwise()`
 
 ```{r}
+
+myris = iris
+myris$mean = apply(iris[, 1:4], 1, mean)
+head(myris)
+
+#can use mutate in the same way
+#if you want the rowwise mean, you need to use row wise
+
+myris = mutate(myris, mean2 = mean(c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width))) #still does the wrong thing.
+head(myris)
+
+myris = rowwise(myris) %>% mutate(mean2 = mean(c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width))) 
+head(myris)
+#rowwise is a special case of group by
+
+
+
 mysleep$new <- mysleep$extra * 3
 head(mysleep)
 double.max(mysleep.wide$pre)
@@ -347,7 +475,7 @@ mysleep.wide %>%
 # - pull out the t, df, and p-value into a (one-row) data frame
 my.iris <- iris
 ttest.results <- t.test(my.iris[, "Sepal.Length"], my.iris[, "Sepal.Width"])
-t.dval <- ttest.results$statistic
+t.val <- ttest.results$statistic
 df.val <- ttest.results$parameter
 p.val <- ttest.results$p.value
 
@@ -378,7 +506,7 @@ results.table
 #    add something
 # 6. double-check stuff
 
-all.species.names <- levels(my.iris$Species)
+all.species.names <- levels(my.iris$Species)          #setting up our blank results table
 results.table <- data.frame(Species = all.species.names,
                             t = NA,
                             df = NA,
@@ -392,18 +520,20 @@ for(species.name in all.species.names) {
   df.val <- ttest.results$parameter
   p.val <- ttest.results$p.value
 
-  results.table[results.table$Species == species.name, 
+  results.table[results.table$Species == species.name, #matching the value of the table for the current loop
                 c("t", "df", "p.val")] <- c(t.val, df.val, p.val)
 }
 results.table
 
-# write a function that will return the one-row data frame of results
+# write a function that will return the one-row data frame of results  
+# making this benefit us by letting control which things we are testing - more general function
+# also this is a case where tibble messes you up. with a dataframe, you get a vector, but a single column of a tibble is still a dataframe
 get.ttest <- function(data, col1, col2) {
   # data is a data frame
   # col1 is a string that's a column name
   # col2 is a string that's another column name
   data <- as.data.frame(data)
-  ttest.results <- t.test(data[, col1], data[, col2])
+  ttest.results <- t.test(data[, col1], data[, col2]) # generalized for which columns
   t.val <- ttest.results$statistic
   df.val <- ttest.results$parameter
   p.val <- ttest.results$p.value
@@ -415,17 +545,47 @@ get.ttest <- function(data, col1, col2) {
 }
 # run the function on the overall iris data
 
-get.ttest(data = my.iris, col1 = "Sepal.Width", col2 = "Sepal.Length")
+get.ttest(data = my.iris, col1 = "Sepal.Width", col2 = "Sepal.Length")  #NOW you run the function
 
-# use group_by() and do() to get the results separately for each level of Species
+# use group_by() and do() to get the results separately for each level of Species - run the function for any combination of factors we want. here comes the final payoff!
 
-my.byspecies.results <- group_by(my.iris, Species) %>%
+my.byspecies.results <- group_by(my.iris, Species) %>%  #group by species and say do()
   do(get.ttest(., col1 = "Sepal.Width", col2 = "Sepal.Length")) 
+
+#inside do, '.' means the dataframe I just got with the grouping
 
 my.byspecies.results
 
+myris = as.data.frame(iris)
+myris$plantID = 1:nrow(myris)
+head(myris)
+myris.long = gather(myris, part.dim, cm, Sepal.Length:Petal.Width)
+head(myris.long)
+myris.long = separate(myris.long, part.dim, into = c("part", "dim"), sep = "\\.")
+head(myris.long)
+
+
+myris.wide = spread(myris.long, dim, cm)
+head(myris.wide)
+
+#got to this point because we want to test the means between length and width
+get.ttest(myris.wide, "Length", "Width")
+
+#what if we want to split this by species???
+group_by(myris.wide, Species) %>% do(get.ttest(., "Length", "Width"))
+
+group_by(myris.wide, Species, part) %>% do(get.ttest(., "Length", "Width"))
+
+#this is the payoff for creating a function! Remember? We created get.ttest()
+
 debug(get.ttest)
 # undebug(get.ttest)
+
+#debug - can do this for any function
+#now, when you run the function, it puts you in 'debugging mode'
+#steps through your code line by line and shows you what's in your environment
+#can enter things at any point in the browse line to see what the status is, like objects(), etc
+#can also put 'browser()' at any point in your function and it'll pop you into browser/debug mode at that point if you don't want to have to step through the whole thing.
 
 
 group_by(my.iris, Species) %>%
@@ -656,6 +816,8 @@ y
 
 ```{r}
 # source("day9/anotherfunction.R")
+#if your function is in a script, by itself, you can source()
+#source runs all the code that's in that script file. 
 ```
 
   - package!
@@ -728,7 +890,7 @@ my.pvals.v2(mysleep3, DV = "time.sleep", factor = "condition") # this will break
 
 ```
 
-### "fake function" debugging
+### "fake function" debugging - essentially, making a test case
 
 ```{r}
 my.pvals.v2(mysleep3, DV = "time.sleep", factor = "condition")
